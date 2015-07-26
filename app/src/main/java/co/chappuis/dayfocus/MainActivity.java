@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Calendar;
+
 
 public class MainActivity extends ActionBarActivity {
     private String tag = "DayFocus";
@@ -24,31 +26,44 @@ public class MainActivity extends ActionBarActivity {
     private String dailyFocus;
 
     //SP to store focuse(s)
-    SharedPreferences sharedPref;
-    SharedPreferences.Editor editor;
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
+    //Date to compare to keys in SP
+    private Calendar cal;
+    private String today;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Set up UI elements
         setContentView(R.layout.activity_main);
         dailyGreeting = (TextView) findViewById(R.id.greeting);
         editFocus = (EditText) findViewById(R.id.edit_focus);
         submitButton = (Button) findViewById(R.id.submit_button);
-
+        //Set up focus storage bits
         sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-        editor = sharedPref.edit();
-        //Set the edit text to the stored focus if there is one, otherwise leave it empty
-        editFocus.setText(sharedPref.getString(getString(R.string.pref_file_key), ""));
+        cal = Calendar.getInstance();
+        today = ""+cal.get(Calendar.DATE);
+        //Set dailyGreeting to focus if there is one, or to a greeting
+            dailyGreeting.setText(sharedPref.getString(today, getString(R.string.greeting_text)));
+        if(sharedPref.contains(today)) {
+            editFocus.setVisibility(View.VISIBLE);
+            submitButton.setVisibility(View.VISIBLE);
+        } else {
+            submitButton.setVisibility(View.INVISIBLE);
+            editFocus.setVisibility(View.INVISIBLE);
+        }
+
     }
 
-    @Override
+    /**@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
+    }**/
 
-    @Override
+    /**@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -61,10 +76,10 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }**/
 
     public void setFocus(View view) {
-        String enteredFocus =  editFocus.getText().toString();
+        String enteredFocus =  editFocus.getText().toString().toUpperCase();
         if(enteredFocus.equals("")) {
             //Display a toast telling the user that they entered an empty focus
             Context context = getApplicationContext();
@@ -73,16 +88,18 @@ public class MainActivity extends ActionBarActivity {
             toast.show();
             Log.d(tag, "Entered focus is empty");
         } else {
-            //Stores the focus TODO until next day
-            editor.putString(getString(R.string.pref_file_key), enteredFocus);
-            editor.commit();
+            //Stores the focus until next day
+            editor = sharedPref.edit();
+            editor.putString(today, enteredFocus);
+            editor.apply();
             //TODO Start persistent notification
             //For debugging purposes only
             dailyGreeting.setText(enteredFocus);
             Log.d(tag, "Entered focus is " + enteredFocus);
 
-            //Hide button TODO until next day
+            //Hide button and EditText until next day
             submitButton.setVisibility(View.INVISIBLE);
+            editFocus.setVisibility(View.INVISIBLE);
         }
     }
 }

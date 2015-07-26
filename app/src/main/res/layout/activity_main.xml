@@ -12,7 +12,7 @@
         android:layout_height="0dp"
         android:src="@mipmap/icon"
         android:layout_gravity="center_horizontal"
-        android:layout_weight=".75" />
+        android:layout_weight=".9" />
 
     <TextView android:id="@+id/greeting"
         android:text="@string/greeting_text"
@@ -28,7 +28,7 @@
         android:textAlignment="center"
         android:singleLine="true"
         android:textSize="40sp"
-        android:layout_marginTop="75dp" />
+        android:layout_marginTop="50dp" />
 
     <Button android:id="@+id/submit_button"
         android:text="@string/submit_button_text"
