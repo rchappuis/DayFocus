@@ -8,7 +8,7 @@
     <color name="yellow_500">#ffeb3b</color>
     <color name="primary_dark">#fdd835</color>
     <color name="yellow_700">#fbc02d</color>
-    <color name="yellow_800">#f9a825</color>
+    <color name="primary_accent">#f9a825</color>
     <color name="yellow_900">#f57f17</color>
     <color name="yellow_A100">#ffff8d</color>
     <color name="primary">#ffff00</color>
